@@ -1,5 +1,6 @@
 from random import randint
 
+
 class Turtle(object):
     x_position = 0
     y_position = 0
@@ -7,13 +8,13 @@ class Turtle(object):
 
     def go_up(self):
         self.y_position += self.s_values
-    
+
     def go_down(self):
         self.y_position -= self.s_values
 
-    def go_left(self):        
+    def go_left(self):
         self.x_position -= self.s_values
-    
+
     def go_right(self):
         self.x_position += self.s_values
 
@@ -25,7 +26,7 @@ class Turtle(object):
             print("Ошибка. Скорость не может быть нулевой или отрицательной")
             return
         self.s_values -= 1
-    
+
     def count_moves(self, x2, y2):
         count = 0
         x_moves = 0
@@ -40,10 +41,10 @@ class Turtle(object):
         elif self.x_position > x2:
             if self.x_position >= 0 and x2 >= 0:
                 x_moves = self.x_position - x2
-            elif self.x_position >=0 and x2 < 0:
+            elif self.x_position >= 0 and x2 < 0:
                 x_moves = (x2 * -1) + self.x_position
             elif self.x_position < 0 and x2 < 0:
-                x_moves = (x2 - self.x_position) * -1 
+                x_moves = (x2 - self.x_position) * -1
 
         if self.y_position < y2:
             if self.y_position >= 0 and y2 >= 0:
@@ -55,30 +56,18 @@ class Turtle(object):
         elif self.y_position > y2:
             if self.y_position >= 0 and y2 >= 0:
                 y_moves = self.y_position - y2
-            elif self.y_position >=0 and y2 < 0:
+            elif self.y_position >= 0 and y2 < 0:
                 y_moves = (y2 * -1) + self.y_position
             elif self.y_position < 0 and y2 < 0:
-                y_moves = (y2 - self.y_position) * -1 
+                y_moves = (y2 - self.y_position) * -1
 
-        if self.s_values == 1:
-            count = (x_moves + y_moves)
+        if x_moves % self.s_values == 0 and y_moves % self.s_values == 0:
+            count = int((x_moves / self.s_values) + (y_moves / self.s_values))
+            return (count)
         else:
-            if (x_moves < self.s_values) and (((x_moves/self.s_values) % 1) > 0):
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                print("Вам необходимо снизить скорость перемещения!")
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            if (x_moves/self.s_values) % 1 > 0:
-                x_moves += 1
-            if (y_moves < self.s_values) and (((y_moves/self.s_values) % 1) > 0):
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-                print("Вам необходимо снизить скорость перемещения!")
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            if (y_moves/self.s_values)%1 > 0:
-                y_moves += 1
+            count = 0
+            return (count)
 
-            count = int((x_moves + y_moves)/self.s_values)
-        print(f"Минимальное количество перемещений: {count}")
-        print("")
 
 def commands():
     print("Выберите и введите одну из нижеследующих команд")
@@ -90,7 +79,8 @@ def commands():
     print('"вправо" - перемещает черепаху вправо с заданной скоростью')
     print('"количество шагов" - сообщает о минимальном количестве перемещений до цели')
     print('"инфо" - для получения сведений о текущем положении черепахи и ее скорости')
-    print('"точка" - для получения сведений о координатах финиша')
+    print('"цель" - для получения сведений о координатах финиша')
+
 
 print("ЧЕРЕПАШЬИ БЕГА")
 x_target = 0
@@ -106,7 +96,7 @@ if command == "самостоятельно":
 elif command == "рандом":
     x_target = randint(-10, 10)
     y_target = randint(-10, 10)
-else: 
+else:
     print("Ошибка.Неверно введенная команда! Попробуйте еще раз")
     quit()
 ninja = Turtle()
@@ -128,19 +118,34 @@ while command != "stop":
     elif command == "вправо":
         ninja.go_right()
     elif command == "количество шагов":
-        ninja.count_moves(x_target, y_target)
+        count = ninja.count_moves(x_target, y_target)
+        if count > 0:
+            print("")
+            print(f"Минимальное количество перемещений: {count}")
+            print("")
+        else:
+            print("\nC текущей скоростью Вы не сможете добраться до точки финиша.\nВам необходимо изменить скорость черепахи")
+            print("")
     elif command == "stop":
         print("Черепаха не дошла до финиша")
-        print(f"Оставшееся минимальное количество перемещений с текущей скоростью составляет {ninja.count_moves(x_target, y_target)}")
-        quit()
+        count = ninja.count_moves(x_target, y_target)
+        if count > 0:
+            print(
+                f"Оставшееся минимальное количество перемещений составляет {ninja.count_moves(x_target, y_target)}")
+            print("")
+            quit()
+        else:
+            print("С выбранной скоростью черепаха не могла попасть в точку финиша\n")
     elif command == "инфо":
-        print(f"Черепаха находится по следующим координатам: x = {ninja.x_position}, y = {ninja.y_position}, скорость черепахи: {ninja.s_values}")
-    elif command == "точка":
-        print(f"Точка находится по следующим координатам x = {x_target}, y = {y_target}")
+        print(
+            f"Черепаха находится по следующим координатам: x = {ninja.x_position}, y = {ninja.y_position}, скорость черепахи: {ninja.s_values}")
+    elif command == "цель":
+        print(
+            f"Точка находится по следующим координатам x = {x_target}, y = {y_target}")
     else:
         print("-----------------------------------")
         print("Ошибка. Введена неизвестная команда")
         print("-----------------------------------")
     if (ninja.x_position == x_target) and (ninja.y_position == y_target):
-        print("ПОЗДРАВЛЯЕМ! ЧЕРЕПАХА ДОБРАЛАСЬ ДО ЦЕЛИ")
+        print("\nПОЗДРАВЛЯЕМ! ЧЕРЕПАХА ДОБРАЛАСЬ ДО ЦЕЛИ\n")
         command = "stop"
